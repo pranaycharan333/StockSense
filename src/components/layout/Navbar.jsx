@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
   Bell,
@@ -7,14 +7,22 @@ import {
   Sparkles,
   HelpCircle,
   Building2,
-  ChevronDown
+  ChevronDown,
+  LogOut,
+  UserCheck,
+  Shield
 } from 'lucide-react';
 import { useInventory } from '../../hooks/useInventory';
+import { useAuth } from '../../hooks/useAuth';
 
 export const Navbar = ({ onOpenSidebar }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { kpis, products, dashboardFilter, setDashboardFilter, warehouses } = useInventory();
+  const { user, logout } = useAuth();
+  
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const routeTitles = {
     '/': 'Executive Dashboard',
@@ -30,6 +38,12 @@ export const Navbar = ({ onOpenSidebar }) => {
 
   const currentTitle = routeTitles[location.pathname] || 'Inventory Management';
   const lowStockItems = products.filter(p => p.status === 'Low Stock' || p.status === 'Out of Stock');
+
+  const handleLogout = () => {
+    setShowUserMenu(false);
+    logout();
+    navigate('/login');
+  };
 
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-xs border-b border-slate-200/80 px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -127,15 +141,57 @@ export const Navbar = ({ onOpenSidebar }) => {
           )}
         </div>
 
-        {/* User profile avatar */}
-        <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200">
-          <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-teal-500/20">
-            ER
-          </div>
-          <div className="hidden sm:block text-left text-xs leading-tight">
-            <p className="font-semibold text-slate-800">Elena Rostova</p>
-            <p className="text-[10px] text-slate-400">Inventory Director</p>
-          </div>
+        {/* User profile dropdown */}
+        <div className="relative pl-2 border-l border-slate-200">
+          <button
+            onClick={() => setShowUserMenu(!showUserMenu)}
+            className="flex items-center gap-2.5 p-1 rounded-lg hover:bg-slate-100 transition-colors text-left"
+          >
+            <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-teal-500/20">
+              {user?.avatar || 'ER'}
+            </div>
+            <div className="hidden sm:block text-left text-xs leading-tight">
+              <p className="font-semibold text-slate-800">{user?.name || 'Elena Rostova'}</p>
+              <p className="text-[10px] text-slate-400">{user?.role || 'Inventory Director'}</p>
+            </div>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
+          </button>
+
+          {showUserMenu && (
+            <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50 text-xs">
+              <div className="px-4 py-2.5 border-b border-slate-100">
+                <p className="font-bold text-slate-900">{user?.name || 'Elena Rostova'}</p>
+                <p className="text-[11px] text-slate-500 truncate">{user?.email || 'elena.r@stocksense.io'}</p>
+                <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-teal-50 text-teal-700 border border-teal-100">
+                  <Shield className="w-3 h-3 text-teal-600" />
+                  {user?.role || 'Inventory Director'}
+                </div>
+              </div>
+
+              <div className="py-1">
+                <button
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    navigate('/login');
+                  }}
+                  className="w-full px-4 py-2 text-left text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 text-xs"
+                >
+                  <UserCheck className="w-4 h-4 text-slate-400" />
+                  Switch / Re-login
+                </button>
+              </div>
+
+              <div className="border-t border-slate-100 pt-1">
+                <button
+                  onClick={handleLogout}
+                  className="w-full px-4 py-2 text-left text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 text-xs font-semibold"
+                >
+                  <LogOut className="w-4 h-4 text-rose-500" />
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

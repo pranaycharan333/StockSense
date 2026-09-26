@@ -32,14 +32,34 @@ stocksense/
 │
 └── src/
     ├── main.jsx                      # React root initialization
-    ├── App.jsx                       # Routing setup across all 9 pages
+    ├── App.jsx                       # Routing setup across all 9 pages & auth guards
     ├── index.css                     # Tailwind directives and custom scrollbar
+    │
+    ├── context/
+    │   ├── AuthContext.jsx           # User session, login/signup & OTP reset state
+    │   └── InventoryContext.jsx      # Dynamic multi-store state engine & ledger link
+    │
+    ├── pages/
+    │   ├── auth/
+    │   │   ├── Login.jsx             # User login with instant demo access
+    │   │   ├── Signup.jsx            # Account registration
+    │   │   └── ForgotPassword.jsx    # Multi-step 6-digit OTP verification & reset
+    │   ├── Dashboard.jsx             # Executive inventory dashboard
+    │   ├── Products.jsx              # Product catalog
+    │   ├── Receipts.jsx              # Inbound PO receipts
+    │   ├── Deliveries.jsx            # Outbound dispatches
+    │   ├── Transfers.jsx             # Inter-facility transfers
+    │   ├── Adjustments.jsx           # Stock reconciliation audits
+    │   ├── StockLedger.jsx           # Perpetual stock ledger
+    │   ├── Warehouses.jsx            # Facilities & capacity tracking
+    │   └── AIInsights.jsx            # AI demand forecasting & anomalies
     │
     ├── components/
     │   ├── layout/
     │   │   ├── AppLayout.jsx         # Shell with responsive sidebar & notification toast
     │   │   ├── Sidebar.jsx           # Nav menu with badges & live backend status
-    │   │   └── Navbar.jsx            # Header with facility selector & low-stock alerts
+    │   │   └── Navbar.jsx            # Header with facility selector, alerts & user menu
+
     │   │
     │   ├── common/
     │   │   ├── KPICard.jsx           # Metric card with trends and color badges

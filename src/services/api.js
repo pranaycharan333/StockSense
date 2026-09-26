@@ -176,7 +176,37 @@ export const insightsApi = {
   }
 };
 
+export const authApi = {
+  login: async (credentials) => {
+    if (!USE_MOCK_DATA) return request('/auth/login', { method: 'POST', body: JSON.stringify(credentials) });
+    await simulateLatency(300);
+    return { success: true, token: 'mock-jwt-token-123', email: credentials.email };
+  },
+  signup: async (userData) => {
+    if (!USE_MOCK_DATA) return request('/auth/signup', { method: 'POST', body: JSON.stringify(userData) });
+    await simulateLatency(400);
+    return { success: true, token: 'mock-jwt-token-456', user: userData };
+  },
+  sendOtp: async (email) => {
+    if (!USE_MOCK_DATA) return request('/auth/otp/send', { method: 'POST', body: JSON.stringify({ email }) });
+    await simulateLatency(300);
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    return { success: true, otp, email };
+  },
+  verifyOtp: async (email, otp) => {
+    if (!USE_MOCK_DATA) return request('/auth/otp/verify', { method: 'POST', body: JSON.stringify({ email, otp }) });
+    await simulateLatency(250);
+    return { success: true, verified: true };
+  },
+  resetPassword: async (email, newPassword) => {
+    if (!USE_MOCK_DATA) return request('/auth/password/reset', { method: 'POST', body: JSON.stringify({ email, newPassword }) });
+    await simulateLatency(350);
+    return { success: true, message: 'Password updated successfully' };
+  }
+};
+
 const api = {
+  auth: authApi,
   products: productsApi,
   receipts: receiptsApi,
   deliveries: deliveriesApi,
@@ -188,3 +218,4 @@ const api = {
 };
 
 export default api;
+
