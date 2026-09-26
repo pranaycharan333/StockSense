@@ -1,0 +1,24 @@
+USE stocksense_db;
+
+CREATE INDEX idx_users_role_active ON users(role, is_active);
+CREATE INDEX idx_otp_user_expiry ON password_reset_otps(user_id, expires_at);
+CREATE INDEX idx_products_category_active ON products(category_id, is_active);
+CREATE INDEX idx_products_name ON products(name);
+CREATE INDEX idx_suppliers_name ON suppliers(name);
+CREATE INDEX idx_locations_warehouse_active ON locations(warehouse_id, is_active);
+CREATE INDEX idx_inventory_location ON inventory(location_id);
+CREATE INDEX idx_inventory_product ON inventory(product_id);
+CREATE INDEX idx_reorder_location ON reorder_rules(location_id);
+CREATE INDEX idx_documents_type_status ON stock_documents(document_type, status);
+CREATE INDEX idx_documents_scheduled ON stock_documents(scheduled_at);
+CREATE INDEX idx_documents_source ON stock_documents(source_location_id);
+CREATE INDEX idx_documents_destination ON stock_documents(destination_location_id);
+CREATE INDEX idx_documents_supplier ON stock_documents(supplier_id);
+CREATE INDEX idx_document_items_product ON stock_document_items(product_id);
+CREATE INDEX idx_ledger_product_location_date ON stock_ledger(product_id, location_id, occurred_at);
+CREATE INDEX idx_ledger_document ON stock_ledger(document_id);
+CREATE INDEX idx_ledger_occurred_at ON stock_ledger(occurred_at);
+CREATE INDEX idx_alert_active_type ON alerts(status, alert_type);
+CREATE INDEX idx_alert_product_location ON alerts(product_id, location_id);
+CREATE INDEX idx_audit_entity ON audit_logs(entity_type, entity_id);
+CREATE INDEX idx_audit_created_at ON audit_logs(created_at);
