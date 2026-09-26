@@ -1,0 +1,80 @@
+export const initialTransfers = [
+  {
+    id: "trn-301",
+    transferNumber: "TRN-2026-042",
+    fromWarehouse: "Central Logistics Hub",
+    toWarehouse: "West Coast Depository",
+    productId: "prod-3",
+    productName: "Precision Microcontroller Board V3",
+    quantity: 150,
+    date: "2026-09-26",
+    status: "Scheduled",
+    requestedBy: "Sarah Chen",
+    notes: "Rebalancing stock for California project"
+  },
+  {
+    id: "trn-302",
+    transferNumber: "TRN-2026-041",
+    fromWarehouse: "East Coast Gateway",
+    toWarehouse: "Central Logistics Hub",
+    productId: "prod-11",
+    productName: "Nitrile Inspection Gloves (Powder-Free, XL)",
+    quantity: 100,
+    date: "2026-09-25",
+    status: "In Transit",
+    requestedBy: "Elena Rostova",
+    notes: "Cross-dock transfer via Freightliner 912"
+  },
+  {
+    id: "trn-303",
+    transferNumber: "TRN-2026-040",
+    fromWarehouse: "Gulf Coast Distribution",
+    toWarehouse: "Pacific Northwest Annex",
+    productId: "prod-10",
+    productName: "Industrial Stretch Wrap Film (18\" x 1500')",
+    quantity: 50,
+    date: "2026-09-24",
+    status: "Completed",
+    requestedBy: "Aisha Patel",
+    notes: "Urgent packaging replenishment"
+  },
+  {
+    id: "trn-304",
+    transferNumber: "TRN-2026-039",
+    fromWarehouse: "Central Logistics Hub",
+    toWarehouse: "East Coast Gateway",
+    productId: "prod-1",
+    productName: "Industrial Ball Bearings (12mm)",
+    quantity: 80,
+    date: "2026-09-23",
+    status: "Completed",
+    requestedBy: "Marcus Vance",
+    notes: "Quarterly rebalancing"
+  },
+  {
+    id: "trn-305",
+    transferNumber: "TRN-2026-038",
+    fromWarehouse: "West Coast Depository",
+    toWarehouse: "Gulf Coast Distribution",
+    productId: "prod-5",
+    productName: "Thermal Conductive Adhesive Tape (50m)",
+    quantity: 20,
+    date: "2026-09-21",
+    status: "Scheduled",
+    requestedBy: "Devon Reed",
+    notes: "Awaiting carrier pickup"
+  },
+  {
+    id: "trn-306",
+    transferNumber: "TRN-2026-037",
+    fromWarehouse: "Pacific Northwest Annex",
+    toWarehouse: "Central Logistics Hub",
+    productId: "prod-13",
+    productName: "Electronic Barcode Scanner (Handheld BT)",
+    quantity: 5,
+    date: "2026-09-19",
+    status: "Cancelled",
+    requestedBy: "Aisha Patel",
+    notes: "Local scanner shortage prevented transfer"
+  }
+];

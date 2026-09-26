@@ -1,0 +1,92 @@
+export const initialDeliveries = [
+  {
+    id: "del-201",
+    deliveryNumber: "DEL-2026-114",
+    customer: "Tesla Gigafactory Texas",
+    productId: "prod-3",
+    productName: "Precision Microcontroller Board V3",
+    quantity: 200,
+    warehouse: "Central Logistics Hub",
+    date: "2026-09-26",
+    status: "Pending",
+    destination: "Austin, TX",
+    notes: "Priority assembly line allocation"
+  },
+  {
+    id: "del-202",
+    deliveryNumber: "DEL-2026-113",
+    customer: "Boeing Aerostructures",
+    productId: "prod-1",
+    productName: "Industrial Ball Bearings (12mm)",
+    quantity: 60,
+    warehouse: "Central Logistics Hub",
+    date: "2026-09-25",
+    status: "Delivered",
+    destination: "Seattle, WA",
+    notes: "Express freight via FedEx Air"
+  },
+  {
+    id: "del-203",
+    deliveryNumber: "DEL-2026-112",
+    customer: "Amazon Fulfillment Center MDW2",
+    productId: "prod-10",
+    productName: "Industrial Stretch Wrap Film (18\" x 1500')",
+    quantity: 80,
+    warehouse: "Gulf Coast Distribution",
+    date: "2026-09-25",
+    status: "Pending",
+    destination: "Joliet, IL",
+    notes: "Dock door 45 delivery"
+  },
+  {
+    id: "del-204",
+    deliveryNumber: "DEL-2026-111",
+    customer: "Caterpillar Heavy Equipment",
+    productId: "prod-2",
+    productName: "Heavy-Duty Hydraulic Fluid (5L)",
+    quantity: 20,
+    warehouse: "East Coast Gateway",
+    date: "2026-09-24",
+    status: "Delivered",
+    destination: "Peoria, IL",
+    notes: "Service depot batch"
+  },
+  {
+    id: "del-205",
+    deliveryNumber: "DEL-2026-110",
+    customer: "Siemens Automation LLC",
+    productId: "prod-14",
+    productName: "Solid State Relay 40A 240VAC",
+    quantity: 35,
+    warehouse: "West Coast Depository",
+    date: "2026-09-23",
+    status: "Pending",
+    destination: "San Jose, CA",
+    notes: "Special handling requested"
+  },
+  {
+    id: "del-206",
+    deliveryNumber: "DEL-2026-109",
+    customer: "NextGen Data Centers",
+    productId: "prod-7",
+    productName: "Optic Fiber Patch Cable (LC-LC 10m)",
+    quantity: 120,
+    warehouse: "East Coast Gateway",
+    date: "2026-09-21",
+    status: "Delivered",
+    destination: "Ashburn, VA",
+    notes: "Server hall expansion project"
+  },
+  {
+    id: "del-207",
+    deliveryNumber: "DEL-2026-108",
+    customer: "Apex Robotics Ltd",
+    productId: "prod-9",
+    productName: "Lithium Polymer Battery Pack (24V 10Ah)",
+    quantity: 15,
+    warehouse: "Central Logistics Hub",
+    date: "2026-09-20",
+    status: "Cancelled",
+    notes: "Customer delayed production rollout"
+  }
+];
