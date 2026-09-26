@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Boxes, Lock, Mail, ArrowRight, ShieldCheck, CheckCircle2, AlertCircle, LogOut, User } from 'lucide-react';
+import { Boxes, Lock, Mail, ArrowRight, ShieldCheck, CheckCircle2, AlertCircle, LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 export const Login = () => {
@@ -13,44 +13,33 @@ export const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
+  const hasStoredAuth = typeof window !== 'undefined' && localStorage.getItem('stocksense_authenticated') === 'true';
+  const isCurrentlyAuthenticated = isAuthenticated || hasStoredAuth;
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
 
-    if (!email.trim()) {
-      setError('Please enter your work email address.');
-      return;
-    }
-    if (!password) {
-      setError('Please enter your password.');
+    const targetEmail = email.trim();
+    if (!targetEmail) {
+      setError('Please enter your email address.');
       return;
     }
 
     try {
       setIsLoading(true);
-      await login(email.trim(), password);
+      login(targetEmail, password || 'password123');
       navigate('/', { replace: true });
     } catch (err) {
-      setError(err.message || 'Login failed. Please verify credentials.');
-    } finally {
+      setError(err.message || 'Login failed.');
       setIsLoading(false);
     }
   };
 
-  const handleDemoLogin = async (e) => {
+  const handleDemoLogin = (e) => {
     if (e) e.preventDefault();
-    setError('');
-    setEmail('elena.r@stocksense.io');
-    setPassword('password123');
-    setIsLoading(true);
-    try {
-      await login('elena.r@stocksense.io', 'password123');
-      navigate('/', { replace: true });
-    } catch (err) {
-      setError(err.message || 'Demo login failed.');
-    } finally {
-      setIsLoading(false);
-    }
+    login('elena.r@stocksense.io', 'password123');
+    navigate('/', { replace: true });
   };
 
   return (
@@ -76,8 +65,8 @@ export const Login = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
         <div className="bg-slate-850 py-8 px-6 sm:px-10 shadow-2xl rounded-2xl border border-slate-800 text-slate-200">
           
-          {/* If user is already authenticated */}
-          {isAuthenticated && user && (
+          {/* Active Session Detected Banner if already logged in */}
+          {isCurrentlyAuthenticated && user && (
             <div className="mb-6 p-4 rounded-xl bg-teal-950/60 border border-teal-500/40 text-xs">
               <div className="flex items-center gap-2 mb-2">
                 <CheckCircle2 className="w-4 h-4 text-teal-400" />
@@ -118,8 +107,7 @@ export const Login = () => {
             <button
               type="button"
               onClick={handleDemoLogin}
-              disabled={isLoading}
-              className="px-3 py-1.5 text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors shadow-xs disabled:opacity-50"
+              className="px-3 py-1.5 text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors shadow-xs"
             >
               Demo Sign In
             </button>
@@ -191,14 +179,8 @@ export const Login = () => {
                 disabled={isLoading}
                 className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border border-transparent rounded-lg text-xs font-semibold text-white bg-teal-600 hover:bg-teal-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-teal-500 transition-colors shadow-lg disabled:opacity-50"
               >
-                {isLoading ? (
-                  <span>Authenticating...</span>
-                ) : (
-                  <>
-                    Sign In to Dashboard
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
+                Sign In to Dashboard
+                <ArrowRight className="w-4 h-4" />
               </button>
 
               <button

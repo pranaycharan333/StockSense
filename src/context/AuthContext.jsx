@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
-const DEMO_USER = {
+export const DEMO_USER = {
   id: 'usr-101',
   name: 'Elena Rostova',
   email: 'elena.r@stocksense.io',
@@ -34,54 +34,53 @@ export const AuthProvider = ({ children }) => {
   const [activeOtp, setActiveOtp] = useState('482910');
   const [otpEmail, setOtpEmail] = useState('');
 
-  // Synchronize auth state changes to localStorage
+  // Synchronize auth state changes to localStorage immediately
   const saveAuthSession = (userData) => {
-    setUser(userData);
-    setIsAuthenticated(true);
     try {
       localStorage.setItem('stocksense_user', JSON.stringify(userData));
       localStorage.setItem('stocksense_authenticated', 'true');
     } catch (e) {
       console.error('Failed to save auth to localStorage', e);
     }
+    setUser(userData);
+    setIsAuthenticated(true);
   };
 
   const clearAuthSession = () => {
-    setUser(null);
-    setIsAuthenticated(false);
     try {
       localStorage.removeItem('stocksense_user');
       localStorage.setItem('stocksense_authenticated', 'false');
     } catch (e) {
       console.error('Failed to clear auth in localStorage', e);
     }
+    setUser(null);
+    setIsAuthenticated(false);
   };
 
-  // Mock API actions
-  const login = async (email, password) => {
-    await new Promise(res => setTimeout(res, 400)); // simulate latency
-    
-    // Accept demo email or any custom email
-    const loggedInUser = {
+  // Immediate synchronous login (zero async race conditions)
+  const login = (email, password) => {
+    const trimmedEmail = (email || '').trim();
+    const isDemo = !trimmedEmail || trimmedEmail.toLowerCase() === DEMO_USER.email.toLowerCase();
+
+    const loggedInUser = isDemo ? DEMO_USER : {
       id: `usr-${Date.now()}`,
-      name: email === DEMO_USER.email ? DEMO_USER.name : (email.split('@')[0].replace('.', ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase())),
-      email: email,
+      name: trimmedEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase()),
+      email: trimmedEmail,
       role: 'Operations Lead',
       department: 'Logistics & Warehousing',
       company: 'Enterprise Supply Hub',
-      avatar: email.substring(0, 2).toUpperCase()
+      avatar: trimmedEmail.substring(0, 2).toUpperCase()
     };
 
     saveAuthSession(loggedInUser);
     return { success: true, user: loggedInUser };
   };
 
-  const signup = async (userData) => {
-    await new Promise(res => setTimeout(res, 500));
+  const signup = (userData) => {
     const newUser = {
       id: `usr-${Date.now()}`,
       name: userData.fullName || 'Demo User',
-      email: userData.email,
+      email: userData.email || 'user@company.com',
       role: userData.role || 'Inventory Specialist',
       department: userData.department || 'Warehouse Operations',
       company: userData.companyName || 'Global Logistics',
@@ -92,35 +91,32 @@ export const AuthProvider = ({ children }) => {
     return { success: true, user: newUser };
   };
 
-  const requestPasswordResetOtp = async (email) => {
-    await new Promise(res => setTimeout(res, 450));
-    // Generate realistic 6 digit code
+  const requestPasswordResetOtp = (email) => {
     const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
     setActiveOtp(randomCode);
     setOtpEmail(email);
     return { success: true, otp: randomCode, email };
   };
 
-  const verifyOtp = async (email, inputOtp) => {
-    await new Promise(res => setTimeout(res, 350));
-    // Accept both the generated OTP and universal hackathon fallback '123456'
+  const verifyOtp = (email, inputOtp) => {
     if (inputOtp === activeOtp || inputOtp === '123456') {
       return { success: true };
     }
     throw new Error('Invalid verification code. Please check the OTP sent to your email.');
   };
 
-  const resetPassword = async (email, newPassword) => {
-    await new Promise(res => setTimeout(res, 450));
-    // Automatically log user in upon resetting password and set new user
-    const updatedUser = {
+  const resetPassword = (email, newPassword) => {
+    const trimmedEmail = (email || '').trim() || DEMO_USER.email;
+    const isDemo = trimmedEmail.toLowerCase() === DEMO_USER.email.toLowerCase();
+    
+    const updatedUser = isDemo ? DEMO_USER : {
       id: `usr-${Date.now()}`,
-      name: email.split('@')[0].replace('.', ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase()),
-      email: email,
+      name: trimmedEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/(^\w|\s\w)/g, m => m.toUpperCase()),
+      email: trimmedEmail,
       role: 'Inventory Specialist',
       department: 'Warehouse Management',
       company: 'StockSense Enterprise',
-      avatar: email.substring(0, 2).toUpperCase()
+      avatar: trimmedEmail.substring(0, 2).toUpperCase()
     };
 
     saveAuthSession(updatedUser);

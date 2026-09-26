@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { InventoryProvider } from './context/InventoryContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import AppLayout from './components/layout/AppLayout';
@@ -20,7 +20,7 @@ import StockLedger from './pages/StockLedger';
 import Warehouses from './pages/Warehouses';
 import AIInsights from './pages/AIInsights';
 
-// Hash URL redirector (if user types /#/login or /#/products)
+// Hash URL redirector (if user visits /#/login or /#/products)
 const HashRedirector = () => {
   const navigate = useNavigate();
 
@@ -35,10 +35,13 @@ const HashRedirector = () => {
   return null;
 };
 
-// Protected Route Guard
+// Protected Route Guard with synchronous storage fallback
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  if (!isAuthenticated) {
+  const hasAuthToken = typeof window !== 'undefined' && localStorage.getItem('stocksense_authenticated') === 'true';
+  const isAuthed = isAuthenticated || hasAuthToken;
+
+  if (!isAuthed) {
     return <Navigate to="/login" replace />;
   }
   return children;
