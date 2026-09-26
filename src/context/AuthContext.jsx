@@ -24,9 +24,9 @@ export const AuthProvider = ({ children }) => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     try {
-      return localStorage.getItem('stocksense_authenticated') !== 'false';
+      return localStorage.getItem('stocksense_authenticated') === 'true';
     } catch {
-      return true;
+      return false;
     }
   });
 

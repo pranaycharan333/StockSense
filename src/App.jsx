@@ -1,5 +1,5 @@
-import React from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { InventoryProvider } from './context/InventoryContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import AppLayout from './components/layout/AppLayout';
@@ -20,6 +20,21 @@ import StockLedger from './pages/StockLedger';
 import Warehouses from './pages/Warehouses';
 import AIInsights from './pages/AIInsights';
 
+// Hash URL redirector (if user types /#/login or /#/products)
+const HashRedirector = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (window.location.hash.startsWith('#/')) {
+      const cleanPath = window.location.hash.replace('#', '');
+      window.history.replaceState(null, '', cleanPath);
+      navigate(cleanPath, { replace: true });
+    }
+  }, [navigate]);
+
+  return null;
+};
+
 // Protected Route Guard
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -33,7 +48,8 @@ export function App() {
   return (
     <AuthProvider>
       <InventoryProvider>
-        <HashRouter>
+        <BrowserRouter>
+          <HashRedirector />
           <Routes>
             {/* Public Auth Routes */}
             <Route path="/login" element={<Login />} />
@@ -63,7 +79,7 @@ export function App() {
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </HashRouter>
+        </BrowserRouter>
       </InventoryProvider>
     </AuthProvider>
   );

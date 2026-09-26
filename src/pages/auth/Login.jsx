@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Boxes, Lock, Mail, ArrowRight, ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Boxes, Lock, Mail, ArrowRight, ShieldCheck, CheckCircle2, AlertCircle, LogOut, User } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { user, isAuthenticated, login, logout } = useAuth();
 
   const [email, setEmail] = useState('elena.r@stocksense.io');
   const [password, setPassword] = useState('password123');
@@ -18,7 +18,7 @@ export const Login = () => {
     setError('');
 
     if (!email.trim()) {
-      setError('Please enter your work email.');
+      setError('Please enter your work email address.');
       return;
     }
     if (!password) {
@@ -28,9 +28,8 @@ export const Login = () => {
 
     try {
       setIsLoading(true);
-      await login(email, password);
-      // Redirected directly to Inventory Dashboard
-      navigate('/');
+      await login(email.trim(), password);
+      navigate('/', { replace: true });
     } catch (err) {
       setError(err.message || 'Login failed. Please verify credentials.');
     } finally {
@@ -38,12 +37,20 @@ export const Login = () => {
     }
   };
 
-  const handleDemoLogin = async () => {
+  const handleDemoLogin = async (e) => {
+    if (e) e.preventDefault();
+    setError('');
     setEmail('elena.r@stocksense.io');
-    setPassword('demo-admin-pass');
+    setPassword('password123');
     setIsLoading(true);
-    await login('elena.r@stocksense.io', 'demo-admin-pass');
-    navigate('/');
+    try {
+      await login('elena.r@stocksense.io', 'password123');
+      navigate('/', { replace: true });
+    } catch (err) {
+      setError(err.message || 'Demo login failed.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -69,19 +76,50 @@ export const Login = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
         <div className="bg-slate-850 py-8 px-6 sm:px-10 shadow-2xl rounded-2xl border border-slate-800 text-slate-200">
           
+          {/* If user is already authenticated */}
+          {isAuthenticated && user && (
+            <div className="mb-6 p-4 rounded-xl bg-teal-950/60 border border-teal-500/40 text-xs">
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle2 className="w-4 h-4 text-teal-400" />
+                <span className="font-semibold text-teal-300">Active Session Detected</span>
+              </div>
+              <p className="text-slate-300 text-xs mb-3">
+                You are currently signed in as <span className="font-semibold text-white">{user.name}</span> ({user.email}).
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => navigate('/', { replace: true })}
+                  className="flex-1 py-2 px-3 text-xs font-semibold text-white bg-teal-600 hover:bg-teal-500 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-xs"
+                >
+                  Enter Dashboard <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="py-2 px-3 text-xs font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors flex items-center gap-1"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-slate-400" />
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Quick Demo Access banner for Hackathon Judges */}
           <div className="mb-6 p-3 rounded-xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
               <div className="text-[11px]">
-                <span className="font-semibold text-teal-300 block">Hackathon Quick Access</span>
-                <span className="text-slate-400">Pre-configured Director role</span>
+                <span className="font-semibold text-teal-300 block">Hackathon Instant Access</span>
+                <span className="text-slate-400">Elena Rostova (Inventory Director)</span>
               </div>
             </div>
             <button
               type="button"
               onClick={handleDemoLogin}
-              className="px-2.5 py-1 text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors shadow-xs"
+              disabled={isLoading}
+              className="px-3 py-1.5 text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors shadow-xs disabled:opacity-50"
             >
               Demo Sign In
             </button>
@@ -147,7 +185,7 @@ export const Login = () => {
               </label>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 space-y-2">
               <button
                 type="submit"
                 disabled={isLoading}
@@ -161,6 +199,14 @@ export const Login = () => {
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleDemoLogin}
+                className="w-full py-2 px-4 rounded-lg text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:text-white transition-colors text-center"
+              >
+                Explore as Demo Guest &rarr;
               </button>
             </div>
           </form>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import {
   Menu,
   Bell,
@@ -133,9 +133,9 @@ export const Navbar = ({ onOpenSidebar }) => {
                 )}
               </div>
               <div className="px-4 pt-2 border-t border-slate-100 text-center">
-                <a href="#/products" onClick={() => setShowNotifications(false)} className="text-teal-600 hover:text-teal-700 font-semibold text-[11px]">
+                <Link to="/products" onClick={() => setShowNotifications(false)} className="text-teal-600 hover:text-teal-700 font-semibold text-[11px]">
                   View all in Product Catalog &rarr;
-                </a>
+                </Link>
               </div>
             </div>
           )}
